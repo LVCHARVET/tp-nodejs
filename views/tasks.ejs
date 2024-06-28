@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Liste des tâches</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>Liste des tâches</h1>
+
+        <form id="addTaskForm" action="/tasks" method="post">
+            <input type="text" name="title" placeholder="Titre">
+            <textarea name="description" placeholder="Description"></textarea>
+            <button type="submit">Ajouter</button>
+        </form>
+
+        <ul id="tasksList">
+            <% tasks.forEach(task=> { %>
+                <li>
+                    <a href="/tasks/<%= task._id %>">
+                        <%= task.title %>
+                    </a>
+                    <% if (task.completed) { %>
+                        <span class="completed">(Validée)</span>
+                        <% } %>
+                            <form action="/tasks/<%= task._id %>/complete" method="post" style="display: inline;">
+                                <button type="button" class="complete-task-btn">
+                                    <%= task.completed ? 'Annuler' : 'Valider' %>
+                                </button>
+                            </form>
+                            <form action="/tasks/<%= task._id %>/delete" method="post" style="display: inline;">
+                                <input type="hidden" name="_method" value="DELETE">
+                                <button type="submit">Supprimer</button>
+                            </form>
+                </li>
+                <% }); %>
+        </ul>
+
+        <a href="/" class="btn-container">
+            <button>Retour à l'accueil</button>
+        </a>
+        
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.complete-task-btn').on('click', function () {
+                var taskId = $(this).closest('form').attr('action').split('/')[2];
+                $.post('/tasks/' + taskId + '/complete', function (data) {
+                    location.reload();
+                });
+            });
+
+            $('#addTaskForm').on('submit', function (event) {
+                event.preventDefault();
+                var formData = $(this).serialize();
+                $.post('/tasks', formData, function (data) {
+                    location.reload();
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Tâche <%= task.title %>
+    </title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>
+            <%= task.title %>
+        </h1>
+        <p>
+            <%= task.description %>
+        </p>
+
+        <form action="/tasks/<%= task._id %>/update" method="post">
+            <input type="text" name="title" value="<%= task.title %>">
+            <textarea name="description"><%= task.description %></textarea>
+            <button type="submit">Mettre à jour</button>
+        </form>
+
+        <form action="/tasks/<%= task._id %>/delete" method="post">
+            <button type="submit">Supprimer</button>
+        </form>
+
+        <div class="btn-container">
+            <form action="/tasks/<%= task._id %>/complete" method="post">
+                <button type="submit" <%=task.completed ? 'disabled' : '' %>>Marquer comme complétée</button>
+            </form>
+
+            <form action="/tasks/<%= task._id %>/incomplete" method="post">
+                <button type="submit" <%=!task.completed ? 'disabled' : '' %>>Marquer comme non complétée</button>
+            </form>
+        </div>
+
+        <% if (task.completed) { %>
+            <p class="completed">(Complétée)</p>
+            <% } %>
+
+                <a href="/tasks" class="btn-container">
+                    <button>Retour à la liste des tâches</button>
+                </a>
+    </div>
+</body>
+
+</html>
